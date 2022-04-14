@@ -61,4 +61,20 @@ mod tests {
         //then
         assert_eq!(cars.location()[0].current(), 1);
     }
+
+    #[test]
+    fn given_two_cars_when_race_then_two_cars_are_moved() {
+        let car0 = Car::new(GO_DECIDER);
+        let car1 = Car::new(GO_DECIDER);
+
+        let mut cars = Cars::new(vec![car0, car1]);
+
+        cars.race();
+
+        let locations = cars.location();
+
+
+        assert_eq!(locations[0].current(), 1);
+        assert_eq!(locations[1].current(), 1);
+    }
 }
