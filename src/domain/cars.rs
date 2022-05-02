@@ -10,6 +10,15 @@ where
 }
 
 impl<M: MovementDecider + Clone + Copy> Cars<M> {
+    pub fn with_nr_car(nr_cars: u32, decider: M) -> Self {
+        let mut cars: Vec<Car<M>> = vec![];
+        for _ in 0..nr_cars {
+            cars.push(Car::new(decider));
+        }
+
+        Cars::new(cars)
+    }
+
     pub fn new(cars: Vec<Car<M>>) -> Self {
         Cars { cars }
     }
@@ -73,8 +82,19 @@ mod tests {
 
         let locations = cars.location();
 
-
         assert_eq!(locations[0].current(), 1);
         assert_eq!(locations[1].current(), 1);
+    }
+
+    #[test]
+    fn given_nr_cars_when_new_then_created() {
+        //given
+        let nr_cars = 2;
+
+        //when
+        let _ = Cars::with_nr_car(nr_cars, GO_DECIDER);
+
+        //then
+        //no compile error
     }
 }
