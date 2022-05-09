@@ -14,7 +14,7 @@ impl Car {
 
     fn race(&mut self, j: &dyn Judge) {
         if j.judge() == true {
-            self.position.increase();
+            self.position = self.position.increase();
         }
     }
 
@@ -29,14 +29,14 @@ mod tests {
     use crate::domain2::judge::Judge;
     use crate::domain2::position::Position;
 
-    struct TestFixture;
-    impl Judge for TestFixture {
+    struct Fixture;
+    impl Judge for Fixture {
         fn judge(&self) -> bool {
             true
         }
     }
 
-    static F: TestFixture = TestFixture;
+    static F: Fixture = Fixture;
 
     #[test]
     fn when_new_then_created() {

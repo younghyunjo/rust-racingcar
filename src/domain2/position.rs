@@ -12,7 +12,7 @@ impl Position {
         Position { position }
     }
 
-    pub fn increase(&mut self) {
-        self.position += 1;
+    pub fn increase(&self) -> Position {
+        Position::with_position(self.position + 1)
     }
 }
