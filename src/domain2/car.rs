@@ -1,25 +1,25 @@
 use crate::domain2::judge::Judge;
 use crate::domain2::position::Position;
 
-struct Car {
+pub struct Car {
     position: Position,
 }
 
 impl Car {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Car {
             position: Position::new(),
         }
     }
 
-    fn race(&mut self, j: &dyn Judge) {
-        if j.judge() == true {
+    pub fn race(&mut self, judge: &dyn Judge) {
+        if judge.judge() == true {
             self.position = self.position.increase();
         }
     }
 
-    fn position(&self) -> &Position {
-        &self.position
+    pub fn position(&self) -> Position {
+        self.position.clone()
     }
 }
 
@@ -52,6 +52,6 @@ mod tests {
         c.race(&F);
 
         //then
-        assert_eq!(c.position(), &Position::with_position(1));
+        assert_eq!(c.position(), Position::with_position(1));
     }
 }
