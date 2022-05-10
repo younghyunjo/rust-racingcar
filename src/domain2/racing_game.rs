@@ -1,0 +1,81 @@
+use std::cell::RefCell;
+
+use crate::domain2::cars::Cars;
+use crate::domain2::judge::Judge;
+use crate::domain2::position::Position;
+use crate::domain2::racing_game_callbacks::RacingGameCallback;
+
+struct RacingGame<'a> {
+    judge: &'a (dyn Judge),
+    callback: RefCell<Vec<&'a dyn RacingGameCallback>>,
+    cars: Cars,
+}
+
+impl<'a> RacingGame<'a> {
+    fn new(nr_cars: u32, judge: &'a dyn Judge) -> Self {
+        RacingGame {
+            cars: Cars::new(nr_cars),
+            judge,
+            callback: RefCell::new(vec![]),
+        }
+    }
+
+    fn add_callback(&self, callback: &'a dyn RacingGameCallback) {
+        self.callback.borrow_mut().push(callback);
+    }
+
+    fn race(&mut self) {
+        self.cars.race(self.judge);
+        for c in self.callback.borrow().iter() {
+            c.on_raced(self.cars.positions());
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::domain2::judge::Judge;
+    use crate::domain2::position::Position;
+    use crate::domain2::racing_game::RacingGame;
+    use crate::domain2::racing_game_callbacks::RacingGameCallback;
+    use std::cell::RefCell;
+
+    struct Fixture {
+        on_race_called: RefCell<bool>,
+    }
+
+    impl Fixture {
+        fn new() -> Self {
+            Fixture {
+                on_race_called: RefCell::new(false),
+            }
+        }
+    }
+
+    impl Judge for Fixture {
+        fn judge(&self) -> bool {
+            true
+        }
+    }
+
+    impl RacingGameCallback for Fixture {
+        fn on_raced(&self, positions: Vec<Position>) {
+            println!("hello");
+            self.on_race_called.replace(true);
+        }
+    }
+
+    #[test]
+    fn when_race_then_callback_called() {
+        //given
+        let f = Fixture::new();
+        let mut r = RacingGame::new(3, &f as &dyn Judge);
+        r.add_callback(&f);
+
+        //when
+        r.race();
+
+        //then
+        assert_eq!(f.on_race_called.take(), true);
+    }
+}

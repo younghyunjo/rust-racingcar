@@ -2,7 +2,7 @@ use crate::domain2::car::Car;
 use crate::domain2::judge::Judge;
 use crate::domain2::position::Position;
 
-struct Cars {
+pub struct Cars {
     cars: Vec<Car>,
 }
 
