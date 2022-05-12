@@ -92,7 +92,7 @@ mod tests {
 
         //then
         for p in f.positions.take() {
-            assert_eq!(p, Position::with_position(1));
+            assert_eq!(p, Position::from(1));
         }
     }
 }

@@ -57,6 +57,6 @@ mod tests {
         let c = c.race(&F);
 
         //then
-        assert_eq!(c.position(), Position::with_position(1));
+        assert_eq!(c.position(), Position::from(1));
     }
 }

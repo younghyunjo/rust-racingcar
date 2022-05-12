@@ -1,6 +1,6 @@
 mod car;
 mod cars;
 mod judge;
-mod position;
+pub mod position;
 mod racing_game;
 mod racing_game_callbacks;

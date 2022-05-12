@@ -1,3 +1,4 @@
+use std::convert::From;
 use std::fmt::{Debug, Display, Formatter};
 
 #[derive(PartialEq, Debug, Clone)]
@@ -11,16 +12,18 @@ impl Display for Position {
     }
 }
 
+impl From<u32> for Position {
+    fn from(poistion: u32) -> Self {
+        Position { position: poistion }
+    }
+}
+
 impl Position {
     pub fn new() -> Position {
         Position { position: 0 }
     }
 
-    pub fn with_position(position: u32) -> Position {
-        Position { position }
-    }
-
     pub fn increase(&self) -> Position {
-        Position::with_position(self.position + 1)
+        Position::from(self.position + 1)
     }
 }

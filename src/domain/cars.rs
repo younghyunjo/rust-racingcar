@@ -57,7 +57,7 @@ mod tests {
 
         let positions = cars.positions();
         for p in positions.into_iter() {
-            assert_eq!(p, Position::with_position(1));
+            assert_eq!(p, Position::from(1));
         }
     }
 }
