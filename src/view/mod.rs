@@ -1,1 +1,2 @@
-mod output;
+pub mod output;
+pub mod input;
