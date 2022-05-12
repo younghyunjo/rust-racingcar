@@ -1,5 +1,5 @@
-use crate::domain2::judge::Judge;
-use crate::domain2::position::Position;
+use crate::domain::judge::Judge;
+use crate::domain::position::Position;
 
 pub struct Car {
     position: Position,
@@ -30,9 +30,9 @@ impl Car {
 
 #[cfg(test)]
 mod tests {
-    use crate::domain2::car::Car;
-    use crate::domain2::judge::Judge;
-    use crate::domain2::position::Position;
+    use crate::domain::car::Car;
+    use crate::domain::judge::Judge;
+    use crate::domain::position::Position;
 
     struct Fixture;
     impl Judge for Fixture {

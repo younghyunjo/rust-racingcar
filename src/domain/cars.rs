@@ -1,6 +1,6 @@
-use crate::domain2::car::Car;
-use crate::domain2::judge::Judge;
-use crate::domain2::position::Position;
+use crate::domain::car::Car;
+use crate::domain::judge::Judge;
+use crate::domain::position::Position;
 
 pub struct Cars {
     cars: Vec<Car>,
@@ -30,9 +30,9 @@ impl Cars {
 
 #[cfg(test)]
 mod tests {
-    use crate::domain2::cars::Cars;
-    use crate::domain2::judge::Judge;
-    use crate::domain2::position::Position;
+    use crate::domain::cars::Cars;
+    use crate::domain::judge::Judge;
+    use crate::domain::position::Position;
 
     struct Fixture;
     impl Judge for Fixture {

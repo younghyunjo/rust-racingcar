@@ -1,4 +1,4 @@
-mod domain2;
+mod domain;
 
 fn main() {
     println!("Hello, world!");

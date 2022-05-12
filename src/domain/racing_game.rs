@@ -1,8 +1,8 @@
 use std::cell::RefCell;
 
-use crate::domain2::cars::Cars;
-use crate::domain2::judge::Judge;
-use crate::domain2::racing_game_callbacks::RacingGameCallback;
+use crate::domain::cars::Cars;
+use crate::domain::judge::Judge;
+use crate::domain::racing_game_callbacks::RacingGameCallback;
 
 struct RacingGame<'a> {
     judge: &'a (dyn Judge),
@@ -33,10 +33,10 @@ impl<'a> RacingGame<'a> {
 
 #[cfg(test)]
 mod tests {
-    use crate::domain2::judge::Judge;
-    use crate::domain2::position::Position;
-    use crate::domain2::racing_game::RacingGame;
-    use crate::domain2::racing_game_callbacks::RacingGameCallback;
+    use crate::domain::judge::Judge;
+    use crate::domain::position::Position;
+    use crate::domain::racing_game::RacingGame;
+    use crate::domain::racing_game_callbacks::RacingGameCallback;
     use std::cell::RefCell;
 
     struct Fixture {
