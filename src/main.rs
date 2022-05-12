@@ -1,3 +1,4 @@
+mod view;
 mod domain;
 
 fn main() {
