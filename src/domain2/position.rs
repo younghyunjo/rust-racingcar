@@ -1,6 +1,14 @@
+use std::fmt::{Debug, Display, Formatter};
+
 #[derive(PartialEq, Debug, Clone)]
 pub struct Position {
     position: u32,
+}
+
+impl Display for Position {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.position)
+    }
 }
 
 impl Position {

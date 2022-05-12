@@ -2,7 +2,6 @@ use std::cell::RefCell;
 
 use crate::domain2::cars::Cars;
 use crate::domain2::judge::Judge;
-use crate::domain2::position::Position;
 use crate::domain2::racing_game_callbacks::RacingGameCallback;
 
 struct RacingGame<'a> {
@@ -42,12 +41,14 @@ mod tests {
 
     struct Fixture {
         on_race_called: RefCell<bool>,
+        positions: RefCell<Vec<Position>>,
     }
 
     impl Fixture {
         fn new() -> Self {
             Fixture {
                 on_race_called: RefCell::new(false),
+                positions: RefCell::new(vec![]),
             }
         }
     }
@@ -62,6 +63,7 @@ mod tests {
         fn on_raced(&self, positions: Vec<Position>) {
             println!("hello");
             self.on_race_called.replace(true);
+            self.positions.replace(positions);
         }
     }
 
@@ -77,5 +79,21 @@ mod tests {
 
         //then
         assert_eq!(f.on_race_called.take(), true);
+    }
+
+    #[test]
+    fn when_race_then_position_is_changed() {
+        //given
+        let f = Fixture::new();
+        let mut r = RacingGame::new(3, &f as &dyn Judge);
+        r.add_callback(&f);
+
+        //when
+        r.race();
+
+        //then
+        for p in f.positions.take() {
+            assert_eq!(p, Position::with_position(1));
+        }
     }
 }
