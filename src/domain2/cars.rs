@@ -15,10 +15,12 @@ impl Cars {
         Cars { cars }
     }
 
-    pub fn race(&mut self, judge: &dyn Judge) {
-        for car in self.cars.iter_mut() {
-            car.race(judge);
-        }
+    pub fn with_cars(cars: Vec<Car>) -> Self {
+        Cars { cars }
+    }
+
+    pub fn race(&self, judge: &dyn Judge) -> Self {
+        Cars::with_cars(self.cars.iter().map(|c| c.race(judge)).collect())
     }
 
     pub fn positions(&self) -> Vec<Position> {
@@ -49,9 +51,9 @@ mod tests {
 
     #[test]
     fn when_race_then_positions_are_increated() {
-        let mut cars = Cars::new(2);
+        let cars = Cars::new(2);
 
-        cars.race(&F);
+        let cars = cars.race(&F);
 
         let positions = cars.positions();
         for p in positions.into_iter() {

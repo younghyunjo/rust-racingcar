@@ -12,10 +12,15 @@ impl Car {
         }
     }
 
-    pub fn race(&mut self, judge: &dyn Judge) {
+    pub fn with_position(position: Position) -> Self {
+        Car { position }
+    }
+
+    pub fn race(&self, judge: &dyn Judge) -> Car {
         if judge.judge() == true {
-            self.position = self.position.increase();
+            return Car::with_position(self.position.increase());
         }
+        return Car::with_position(self.position());
     }
 
     pub fn position(&self) -> Position {
@@ -46,10 +51,10 @@ mod tests {
     #[test]
     fn when_race_then_position_increased() {
         //given
-        let mut c = Car::new();
+        let c = Car::new();
 
         //when
-        c.race(&F);
+        let c = c.race(&F);
 
         //then
         assert_eq!(c.position(), Position::with_position(1));

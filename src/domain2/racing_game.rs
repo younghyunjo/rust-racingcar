@@ -24,7 +24,7 @@ impl<'a> RacingGame<'a> {
     }
 
     fn race(&mut self) {
-        self.cars.race(self.judge);
+        self.cars = self.cars.race(self.judge);
         for c in self.callback.borrow().iter() {
             c.on_raced(self.cars.positions());
         }
