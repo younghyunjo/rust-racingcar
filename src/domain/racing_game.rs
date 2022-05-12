@@ -4,29 +4,33 @@ use crate::domain::cars::Cars;
 use crate::domain::judge::Judge;
 use crate::domain::racing_game_callbacks::RacingGameCallback;
 
-struct RacingGame<'a> {
+pub struct RacingGame<'a> {
     judge: &'a (dyn Judge),
     callback: RefCell<Vec<&'a dyn RacingGameCallback>>,
     cars: Cars,
+    count: u32,
 }
 
 impl<'a> RacingGame<'a> {
-    fn new(nr_cars: u32, judge: &'a dyn Judge) -> Self {
+    pub fn new(nr_cars: u32, count: u32, judge: &'a dyn Judge) -> Self {
         RacingGame {
             cars: Cars::new(nr_cars),
             judge,
             callback: RefCell::new(vec![]),
+            count,
         }
     }
 
-    fn add_callback(&self, callback: &'a dyn RacingGameCallback) {
+    pub fn add_callback(&self, callback: &'a dyn RacingGameCallback) {
         self.callback.borrow_mut().push(callback);
     }
 
-    fn race(&mut self) {
-        self.cars = self.cars.race(self.judge);
-        for c in self.callback.borrow().iter() {
-            c.on_raced(self.cars.positions());
+    pub fn race(&mut self) {
+        for _ in 0..self.count {
+            self.cars = self.cars.race(self.judge);
+            for c in self.callback.borrow().iter() {
+                c.on_raced(self.cars.positions());
+            }
         }
     }
 }
@@ -38,16 +42,17 @@ mod tests {
     use crate::domain::racing_game::RacingGame;
     use crate::domain::racing_game_callbacks::RacingGameCallback;
     use std::cell::RefCell;
+    use std::ops::Add;
 
     struct Fixture {
-        on_race_called: RefCell<bool>,
+        nr_on_race_called: RefCell<u32>,
         positions: RefCell<Vec<Position>>,
     }
 
     impl Fixture {
         fn new() -> Self {
             Fixture {
-                on_race_called: RefCell::new(false),
+                nr_on_race_called: RefCell::new(0),
                 positions: RefCell::new(vec![]),
             }
         }
@@ -61,7 +66,8 @@ mod tests {
 
     impl RacingGameCallback for Fixture {
         fn on_raced(&self, positions: Vec<Position>) {
-            self.on_race_called.replace(true);
+            let nr_on_race_called = self.nr_on_race_called.take();
+            self.nr_on_race_called.replace(nr_on_race_called + 1);
             self.positions.replace(positions);
         }
     }
@@ -70,21 +76,21 @@ mod tests {
     fn when_race_then_callback_called() {
         //given
         let f = Fixture::new();
-        let mut r = RacingGame::new(3, &f as &dyn Judge);
+        let mut r = RacingGame::new(3, 1, &f as &dyn Judge);
         r.add_callback(&f);
 
         //when
         r.race();
 
         //then
-        assert_eq!(f.on_race_called.take(), true);
+        assert_eq!(f.nr_on_race_called.take(), 1);
     }
 
     #[test]
     fn when_race_then_position_is_changed() {
         //given
         let f = Fixture::new();
-        let mut r = RacingGame::new(3, &f as &dyn Judge);
+        let mut r = RacingGame::new(3, 1, &f as &dyn Judge);
         r.add_callback(&f);
 
         //when
@@ -94,5 +100,20 @@ mod tests {
         for p in f.positions.take() {
             assert_eq!(p, Position::from(1));
         }
+    }
+
+    #[test]
+    fn given_two_count_when_race_then_callback_called_twice() {
+        //given
+        let f = Fixture::new();
+        let count = 2;
+        let mut r = RacingGame::new(3, count, &f as &dyn Judge);
+        r.add_callback(&f);
+
+        //when
+        r.race();
+
+        //then
+        assert_eq!(f.nr_on_race_called.take(), 2);
     }
 }
