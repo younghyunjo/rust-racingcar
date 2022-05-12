@@ -61,7 +61,6 @@ mod tests {
 
     impl RacingGameCallback for Fixture {
         fn on_raced(&self, positions: Vec<Position>) {
-            println!("hello");
             self.on_race_called.replace(true);
             self.positions.replace(positions);
         }
