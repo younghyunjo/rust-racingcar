@@ -31,6 +31,7 @@ impl<'a> RacingGame<'a> {
             self.cars = self.cars.race(self.judge);
             for c in self.callback.borrow().iter() {
                 c.on_raced(self.cars.positions());
+                c.on_raced2(self.cars.results());
             }
         }
     }
@@ -43,11 +44,13 @@ mod tests {
     use crate::domain::position::Position;
     use crate::domain::racing_game::RacingGame;
     use crate::domain::racing_game_callbacks::RacingGameCallback;
+    use crate::RaceResult;
     use std::cell::RefCell;
 
     struct Fixture {
         nr_on_race_called: RefCell<u32>,
         positions: RefCell<Vec<Position>>,
+        race_results: RefCell<Vec<RaceResult>>,
     }
 
     impl Fixture {
@@ -55,6 +58,7 @@ mod tests {
             Fixture {
                 nr_on_race_called: RefCell::new(0),
                 positions: RefCell::new(vec![]),
+                race_results: RefCell::new(vec![]),
             }
         }
     }
@@ -70,6 +74,10 @@ mod tests {
             let nr_on_race_called = self.nr_on_race_called.take();
             self.nr_on_race_called.replace(nr_on_race_called + 1);
             self.positions.replace(positions);
+        }
+
+        fn on_raced2(&self, result: Vec<RaceResult>) {
+            self.race_results.replace(result);
         }
     }
 
@@ -139,5 +147,24 @@ mod tests {
 
         //then
         assert_eq!(f.nr_on_race_called.take(), 2);
+    }
+
+    #[test]
+    fn when_race_then_on_raced2_callback_called() {
+        //given
+        let f = Fixture::new();
+        let names = vec![
+            Name::new("a").unwrap(),
+            Name::new("b").unwrap(),
+            Name::new("c").unwrap(),
+        ];
+        let mut r = RacingGame::new(names, 1, &f as &dyn Judge);
+        r.add_callback(&f);
+
+        //when
+        r.race();
+
+        //then
+        assert_eq!(f.race_results.take().len(), 3);
     }
 }

@@ -1,6 +1,7 @@
 use crate::domain::judge::Judge;
 use crate::domain::name::Name;
 use crate::domain::position::Position;
+use crate::RaceResult;
 
 pub struct Car {
     position: Position,
@@ -35,6 +36,10 @@ impl Car {
 
     pub fn name(&self) -> Name {
         self.name.clone()
+    }
+
+    pub fn result(&self) -> RaceResult {
+        RaceResult::new(&self.name, self.position.clone())
     }
 }
 
@@ -79,5 +84,16 @@ mod tests {
 
         //when,then
         assert_eq!(c.name(), name);
+    }
+
+    #[test]
+    fn when_result_then_return_results() {
+        //given
+        let name = Name::new("name").unwrap();
+        let c = Car::new(&name.clone());
+
+        let result = c.result();
+        assert_eq!(result.name(), c.name());
+        assert_eq!(result.position(), Position::from(0));
     }
 }

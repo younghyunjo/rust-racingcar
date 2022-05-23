@@ -1,4 +1,4 @@
-use std::fmt::Debug;
+use std::fmt::{Debug, Display, Formatter};
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -24,6 +24,16 @@ impl Name {
         Ok(Name {
             name: name.to_string(),
         })
+    }
+
+    pub fn name(&self) -> String {
+        self.name.clone()
+    }
+}
+
+impl Display for Name {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name)
     }
 }
 

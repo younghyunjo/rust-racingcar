@@ -2,6 +2,7 @@ use crate::domain::car::Car;
 use crate::domain::judge::Judge;
 use crate::domain::name::Name;
 use crate::domain::position::Position;
+use crate::RaceResult;
 
 pub struct Cars {
     cars: Vec<Car>,
@@ -26,6 +27,10 @@ impl Cars {
 
     pub fn positions(&self) -> Vec<Position> {
         self.cars.iter().map(|c| c.position()).collect()
+    }
+
+    pub fn results(&self) -> Vec<RaceResult> {
+        self.cars.iter().map(|c| c.result()).collect()
     }
 }
 
@@ -62,6 +67,20 @@ mod tests {
         let positions = cars.positions();
         for p in positions.into_iter() {
             assert_eq!(p, Position::from(1));
+        }
+    }
+
+    #[test]
+    fn when_results_then_return_results() {
+        let names = vec![Name::new("a").unwrap(), Name::new("b").unwrap()];
+
+        let cars = Cars::new(names);
+        let cars = cars.race(&F);
+
+        let results = cars.results();
+
+        for r in results {
+            assert_eq!(r.position(), Position::from(1));
         }
     }
 }
