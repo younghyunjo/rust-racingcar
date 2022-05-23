@@ -18,6 +18,10 @@ struct Callbacks {
 
 impl RacingGameCallback for Callbacks {
     fn on_raced(&self, result: Vec<RaceResult>) {
+        let on_race_called = self.on_race_called.replace(true);
+        if on_race_called == false {
+            Output::print_title();
+        }
         Output::print_results(result);
     }
 }
