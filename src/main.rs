@@ -17,16 +17,7 @@ struct Callbacks {
 }
 
 impl RacingGameCallback for Callbacks {
-    fn on_raced(&self, positions: Vec<Position>) {
-        // if self.on_race_called.borrow().eq(&false) {
-        //     self.on_race_called.replace(true);
-        //     Output::print_title();
-        // }
-        //
-        // Output::print_positions(positions);
-    }
-
-    fn on_raced2(&self, result: Vec<RaceResult>) {
+    fn on_raced(&self, result: Vec<RaceResult>) {
         Output::print_results(result);
     }
 }

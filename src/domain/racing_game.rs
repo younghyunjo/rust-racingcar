@@ -30,8 +30,7 @@ impl<'a> RacingGame<'a> {
         for _ in 0..self.count {
             self.cars = self.cars.race(self.judge);
             for c in self.callback.borrow().iter() {
-                c.on_raced(self.cars.positions());
-                c.on_raced2(self.cars.results());
+                c.on_raced(self.cars.results());
             }
         }
     }
@@ -76,7 +75,7 @@ mod tests {
             self.positions.replace(positions);
         }
 
-        fn on_raced2(&self, result: Vec<RaceResult>) {
+        fn on_raced(&self, result: Vec<RaceResult>) {
             self.race_results.replace(result);
         }
     }
