@@ -37,13 +37,13 @@ fn main() -> std::io::Result<()> {
         on_race_called: RefCell::new(false),
     };
 
+    let names = Input::car_names()?
+        .into_iter()
+        .map(|n| Name::new(n.as_str()).unwrap())
+        .collect();
+
     let count = Input::count()?;
 
-    let names = vec![
-        Name::new("a").unwrap(),
-        Name::new("b").unwrap(),
-        Name::new("c").unwrap(),
-    ];
     let mut racing_game = RacingGame::new(names, count, &random_judge);
     racing_game.add_callback(&callbakcs);
     racing_game.race();
