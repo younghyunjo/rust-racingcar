@@ -2,6 +2,7 @@ use std::cell::RefCell;
 
 use crate::domain::cars::Cars;
 use crate::domain::judge::Judge;
+use crate::domain::name::Name;
 use crate::domain::racing_game_callbacks::RacingGameCallback;
 
 pub struct RacingGame<'a> {
@@ -12,9 +13,9 @@ pub struct RacingGame<'a> {
 }
 
 impl<'a> RacingGame<'a> {
-    pub fn new(nr_cars: u32, count: u32, judge: &'a dyn Judge) -> Self {
+    pub fn new(names: Vec<Name>, count: u32, judge: &'a dyn Judge) -> Self {
         RacingGame {
-            cars: Cars::new(nr_cars),
+            cars: Cars::new(names),
             judge,
             callback: RefCell::new(vec![]),
             count,
@@ -38,11 +39,11 @@ impl<'a> RacingGame<'a> {
 #[cfg(test)]
 mod tests {
     use crate::domain::judge::Judge;
+    use crate::domain::name::Name;
     use crate::domain::position::Position;
     use crate::domain::racing_game::RacingGame;
     use crate::domain::racing_game_callbacks::RacingGameCallback;
     use std::cell::RefCell;
-    use std::ops::Add;
 
     struct Fixture {
         nr_on_race_called: RefCell<u32>,
@@ -73,10 +74,23 @@ mod tests {
     }
 
     #[test]
+    fn given_names_when_new_then_created() {
+        let f = Fixture::new();
+        let names = vec![Name::new("a").unwrap(), Name::new("b").unwrap()];
+
+        let _ = RacingGame::new(names, 1, &f as &dyn Judge);
+    }
+
+    #[test]
     fn when_race_then_callback_called() {
         //given
         let f = Fixture::new();
-        let mut r = RacingGame::new(3, 1, &f as &dyn Judge);
+        let names = vec![
+            Name::new("a").unwrap(),
+            Name::new("b").unwrap(),
+            Name::new("c").unwrap(),
+        ];
+        let mut r = RacingGame::new(names, 1, &f as &dyn Judge);
         r.add_callback(&f);
 
         //when
@@ -90,7 +104,12 @@ mod tests {
     fn when_race_then_position_is_changed() {
         //given
         let f = Fixture::new();
-        let mut r = RacingGame::new(3, 1, &f as &dyn Judge);
+        let names = vec![
+            Name::new("a").unwrap(),
+            Name::new("b").unwrap(),
+            Name::new("c").unwrap(),
+        ];
+        let mut r = RacingGame::new(names, 1, &f as &dyn Judge);
         r.add_callback(&f);
 
         //when
@@ -107,7 +126,12 @@ mod tests {
         //given
         let f = Fixture::new();
         let count = 2;
-        let mut r = RacingGame::new(3, count, &f as &dyn Judge);
+        let names = vec![
+            Name::new("a").unwrap(),
+            Name::new("b").unwrap(),
+            Name::new("c").unwrap(),
+        ];
+        let mut r = RacingGame::new(names, count, &f as &dyn Judge);
         r.add_callback(&f);
 
         //when

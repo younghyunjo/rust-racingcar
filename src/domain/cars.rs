@@ -1,5 +1,6 @@
 use crate::domain::car::Car;
 use crate::domain::judge::Judge;
+use crate::domain::name::Name;
 use crate::domain::position::Position;
 
 pub struct Cars {
@@ -7,10 +8,10 @@ pub struct Cars {
 }
 
 impl Cars {
-    pub fn new(nr_cars: u32) -> Self {
+    pub fn new(names: Vec<Name>) -> Self {
         let mut cars: Vec<Car> = vec![];
-        for _ in 0..nr_cars {
-            cars.push(Car::new());
+        for name in names {
+            cars.push(Car::new(&name));
         }
         Cars { cars }
     }
@@ -32,6 +33,7 @@ impl Cars {
 mod tests {
     use crate::domain::cars::Cars;
     use crate::domain::judge::Judge;
+    use crate::domain::name::Name;
     use crate::domain::position::Position;
 
     struct Fixture;
@@ -44,14 +46,16 @@ mod tests {
     static F: Fixture = Fixture;
 
     #[test]
-    fn given_nr_cars_when_new_then_created() {
-        let nr_cars: u32 = 2;
-        let _ = Cars::new(nr_cars);
+    fn given_names_when_new_then_created() {
+        let names = vec![Name::new("a").unwrap(), Name::new("b").unwrap()];
+        let _ = Cars::new(names);
     }
 
     #[test]
     fn when_race_then_positions_are_increated() {
-        let cars = Cars::new(2);
+        let names = vec![Name::new("a").unwrap(), Name::new("b").unwrap()];
+
+        let cars = Cars::new(names);
 
         let cars = cars.race(&F);
 
