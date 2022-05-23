@@ -70,6 +70,8 @@ mod tests {
 
     impl RacingGameCallback for Fixture {
         fn on_raced(&self, result: Vec<RaceResult>) {
+            let nr_on_race_called = self.nr_on_race_called.take();
+            self.nr_on_race_called.replace(nr_on_race_called +1);
             self.race_results.replace(result);
         }
     }

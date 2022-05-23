@@ -59,9 +59,10 @@ mod tests {
 
         let cars = cars.race(&F);
 
-        let positions = cars.positions();
-        for p in positions.into_iter() {
-            assert_eq!(p, Position::from(1));
+        let results = cars.results();
+
+        for r in results.into_iter() {
+            assert_eq!(r.position(), Position::from(1));
         }
     }
 
