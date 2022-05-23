@@ -1,7 +1,6 @@
 use crate::domain::car::Car;
 use crate::domain::judge::Judge;
 use crate::domain::name::Name;
-use crate::domain::position::Position;
 use crate::RaceResult;
 
 pub struct Cars {
@@ -23,10 +22,6 @@ impl Cars {
 
     pub fn race(&self, judge: &dyn Judge) -> Self {
         Cars::with_cars(self.cars.iter().map(|c| c.race(judge)).collect())
-    }
-
-    pub fn positions(&self) -> Vec<Position> {
-        self.cars.iter().map(|c| c.position()).collect()
     }
 
     pub fn results(&self) -> Vec<RaceResult> {

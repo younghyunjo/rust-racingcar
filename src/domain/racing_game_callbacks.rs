@@ -1,4 +1,3 @@
-use crate::domain::position::Position;
 use crate::domain::race_result::RaceResult;
 
 pub trait RacingGameCallback {

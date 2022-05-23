@@ -1,6 +1,4 @@
-use crate::domain::position::Position;
 use crate::RaceResult;
-use std::borrow::Borrow;
 
 pub struct Output;
 
