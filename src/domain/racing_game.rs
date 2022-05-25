@@ -1,12 +1,15 @@
+use crate::domain::car::Car;
 use std::cell::RefCell;
 
 use crate::domain::cars::Cars;
 use crate::domain::judge::Judge;
 use crate::domain::name::Name;
 use crate::domain::racing_game_callbacks::RacingGameCallback;
+use crate::domain::winners::Winners;
+use crate::{Position, RaceResult};
 
 pub struct RacingGame<'a> {
-    judge: &'a (dyn Judge),
+    judge: Option<&'a (dyn Judge)>,
     callback: RefCell<Vec<&'a dyn RacingGameCallback>>,
     cars: Cars,
     count: u32,
@@ -16,10 +19,39 @@ impl<'a> RacingGame<'a> {
     pub fn new(names: Vec<Name>, count: u32, judge: &'a dyn Judge) -> Self {
         RacingGame {
             cars: Cars::new(names),
-            judge,
+            judge: Some(judge),
             callback: RefCell::new(vec![]),
             count,
         }
+    }
+
+    pub fn with_results(race_results: Vec<RaceResult>) -> Self {
+        let mut cars: Vec<Car> = vec![];
+        for r in race_results {
+            cars.push(Car::with_position(&r.name(), r.position()));
+        }
+
+        RacingGame {
+            cars: Cars::with_cars(cars),
+            judge: None,
+            callback: RefCell::new(vec![]),
+            count: 0,
+        }
+    }
+
+    pub fn winners(&self) -> Winners {
+        let mut winners_name: Vec<Name> = vec![];
+        let mut winner_position: Position = Position::from(0);
+        for r in self.cars.results() {
+            if r.position() > winner_position {
+                winners_name.clear();
+                winners_name.push(r.name());
+            } else if r.position() == winner_position {
+                winners_name.push(r.name());
+            }
+        }
+
+        Winners::new(winners_name)
     }
 
     pub fn add_callback(&self, callback: &'a dyn RacingGameCallback) {
@@ -28,7 +60,7 @@ impl<'a> RacingGame<'a> {
 
     pub fn race(&mut self) {
         for _ in 0..self.count {
-            self.cars = self.cars.race(self.judge);
+            self.cars = self.cars.race(self.judge.unwrap());
             for c in self.callback.borrow().iter() {
                 c.on_raced(self.cars.results());
             }
@@ -71,9 +103,39 @@ mod tests {
     impl RacingGameCallback for Fixture {
         fn on_raced(&self, result: Vec<RaceResult>) {
             let nr_on_race_called = self.nr_on_race_called.take();
-            self.nr_on_race_called.replace(nr_on_race_called +1);
+            self.nr_on_race_called.replace(nr_on_race_called + 1);
             self.race_results.replace(result);
         }
+    }
+
+    #[test]
+    fn given_race_results_when_with_results_then_racing_game_created() {
+        //given
+        let race_results = vec![
+            RaceResult::new(&Name::new("a").unwrap(), Position::from(1)),
+            RaceResult::new(&Name::new("b").unwrap(), Position::from(2)),
+            RaceResult::new(&Name::new("c").unwrap(), Position::from(3)),
+        ];
+
+        //when, then
+        RacingGame::with_results(race_results);
+    }
+
+    #[test]
+    fn given_race_results_when_winner() {
+        //given
+        let race_results = vec![
+            RaceResult::new(&Name::new("a").unwrap(), Position::from(1)),
+            RaceResult::new(&Name::new("b").unwrap(), Position::from(2)),
+            RaceResult::new(&Name::new("c").unwrap(), Position::from(3)),
+        ];
+        let racing_game = RacingGame::with_results(race_results);
+
+        //when
+        let winners = racing_game.winners();
+
+        //then
+        assert_eq!(winners.names(), vec![Name::new("c").unwrap()]);
     }
 
     #[test]

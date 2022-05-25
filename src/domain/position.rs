@@ -1,7 +1,8 @@
+use std::cmp::Ordering;
 use std::convert::From;
 use std::fmt::{Debug, Display, Formatter};
 
-#[derive(PartialEq, Debug, Clone)]
+#[derive(PartialEq, Debug, Clone, PartialOrd)]
 pub struct Position {
     position: u32,
 }

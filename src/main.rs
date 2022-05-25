@@ -42,6 +42,9 @@ fn main() -> std::io::Result<()> {
     let mut racing_game = RacingGame::new(names, count, &random_judge);
     racing_game.add_callback(&callbakcs);
     racing_game.race();
+    let winners = racing_game.winners();
+
+    Output::print_winners(winners);
 
     Ok(())
 }

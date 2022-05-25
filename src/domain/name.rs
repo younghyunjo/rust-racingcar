@@ -1,4 +1,5 @@
 use std::fmt::{Debug, Display, Formatter};
+use std::str::FromStr;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -10,6 +11,14 @@ pub struct NameError {
 #[derive(Debug, PartialEq, Clone)]
 pub struct Name {
     name: String,
+}
+
+impl FromStr for Name {
+    type Err = NameError;
+
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Name::new(name)
+    }
 }
 
 const MAX_NAME_LEN: usize = 5;
@@ -57,7 +66,6 @@ mod tests {
     fn given_long_name_when_new_then_err() {
         //given
         let name = "long_name";
-
         //when
         let ret = Name::new(name);
 

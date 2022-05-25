@@ -1,6 +1,6 @@
 use crate::{Name, Position};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct RaceResult {
     name: Name,
     position: Position,

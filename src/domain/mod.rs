@@ -7,3 +7,4 @@ pub mod race_result;
 pub mod racing_game;
 pub mod racing_game_callbacks;
 pub mod random_judge;
+pub mod winners;
