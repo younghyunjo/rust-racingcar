@@ -28,7 +28,7 @@ impl<'a> RacingGame<'a> {
     pub fn with_results(race_results: Vec<RaceResult>) -> Self {
         let mut cars: Vec<Car> = vec![];
         for r in race_results {
-            cars.push(Car::with_position(&r.name(), r.position()));
+            cars.push(Car::with_position(r.name(), r.position()));
         }
 
         RacingGame {

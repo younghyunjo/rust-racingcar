@@ -11,7 +11,7 @@ impl Cars {
     pub fn new(names: Vec<Name>) -> Self {
         let mut cars: Vec<Car> = vec![];
         for name in names {
-            cars.push(Car::new(&name));
+            cars.push(Car::new(name));
         }
         Cars { cars }
     }

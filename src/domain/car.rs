@@ -4,30 +4,24 @@ use crate::domain::position::Position;
 use crate::RaceResult;
 
 pub struct Car {
-    position: Position,
     name: Name,
+    position: Position,
 }
 
 impl Car {
-    pub fn new(name: &Name) -> Self {
-        Car {
-            position: Position::new(),
-            name: name.clone(),
-        }
+    pub fn new(name: Name) -> Self {
+        Car::with_position(name, Position::new())
     }
 
-    pub fn with_position(name: &Name, position: Position) -> Self {
-        Car {
-            position,
-            name: name.clone(),
-        }
+    pub fn with_position(name: Name, position: Position) -> Self {
+        Car { name, position }
     }
 
     pub fn race(&self, judge: &dyn Judge) -> Car {
         if judge.judge() == true {
-            return Car::with_position(&self.name(), self.position.increase());
+            return Car::with_position(self.name(), self.position.increase());
         }
-        return Car::with_position(&self.name(), self.position());
+        return Car::with_position(self.name(), self.position());
     }
 
     pub fn position(&self) -> Position {
@@ -61,13 +55,13 @@ mod tests {
 
     #[test]
     fn when_new_then_created() {
-        let _ = Car::new(&Name::new("".into()).unwrap());
+        let _ = Car::new(Name::new("".into()).unwrap());
     }
 
     #[test]
     fn when_race_then_position_increased() {
         //given
-        let c = Car::new(&Name::new("".into()).unwrap());
+        let c = Car::new(Name::new("".into()).unwrap());
 
         //when
         let c = c.race(&F);
@@ -80,7 +74,7 @@ mod tests {
     fn when_name_then_returns_name() {
         //given
         let name = Name::new("name".into()).unwrap();
-        let c = Car::new(&name.clone());
+        let c = Car::new(name.clone());
 
         //when,then
         assert_eq!(c.name(), name);
@@ -90,7 +84,7 @@ mod tests {
     fn when_result_then_return_results() {
         //given
         let name = Name::new("name".into()).unwrap();
-        let c = Car::new(&name.clone());
+        let c = Car::new(name.clone());
 
         let result = c.result();
         assert_eq!(result.name(), c.name());
