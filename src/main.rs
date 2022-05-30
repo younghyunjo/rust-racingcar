@@ -34,7 +34,7 @@ fn main() -> std::io::Result<()> {
 
     let names = Input::car_names()?
         .into_iter()
-        .map(|n| Name::new(n.as_str()).unwrap())
+        .map(|n| Name::new(n.as_str().into()).unwrap())
         .collect();
 
     let count = Input::count()?;

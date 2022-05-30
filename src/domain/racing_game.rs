@@ -112,9 +112,9 @@ mod tests {
     fn given_race_results_when_with_results_then_racing_game_created() {
         //given
         let race_results = vec![
-            RaceResult::new(&Name::new("a").unwrap(), Position::from(1)),
-            RaceResult::new(&Name::new("b").unwrap(), Position::from(2)),
-            RaceResult::new(&Name::new("c").unwrap(), Position::from(3)),
+            RaceResult::new(&Name::new("a".into()).unwrap(), Position::from(1)),
+            RaceResult::new(&Name::new("b".into()).unwrap(), Position::from(2)),
+            RaceResult::new(&Name::new("c".into()).unwrap(), Position::from(3)),
         ];
 
         //when, then
@@ -125,9 +125,9 @@ mod tests {
     fn given_race_results_when_winner() {
         //given
         let race_results = vec![
-            RaceResult::new(&Name::new("a").unwrap(), Position::from(1)),
-            RaceResult::new(&Name::new("b").unwrap(), Position::from(2)),
-            RaceResult::new(&Name::new("c").unwrap(), Position::from(3)),
+            RaceResult::new(&Name::new("a".into()).unwrap(), Position::from(1)),
+            RaceResult::new(&Name::new("b".into()).unwrap(), Position::from(2)),
+            RaceResult::new(&Name::new("c".into()).unwrap(), Position::from(3)),
         ];
         let racing_game = RacingGame::with_results(race_results);
 
@@ -135,13 +135,13 @@ mod tests {
         let winners = racing_game.winners();
 
         //then
-        assert_eq!(winners.names(), vec![Name::new("c").unwrap()]);
+        assert_eq!(winners.names(), vec![Name::new("c".into()).unwrap()]);
     }
 
     #[test]
     fn given_names_when_new_then_created() {
         let f = Fixture::new();
-        let names = vec![Name::new("a").unwrap(), Name::new("b").unwrap()];
+        let names = vec![Name::new("a".into()).unwrap(), Name::new("b".into()).unwrap()];
 
         let _ = RacingGame::new(names, 1, &f as &dyn Judge);
     }
@@ -151,9 +151,9 @@ mod tests {
         //given
         let f = Fixture::new();
         let names = vec![
-            Name::new("a").unwrap(),
-            Name::new("b").unwrap(),
-            Name::new("c").unwrap(),
+            Name::new("a".into()).unwrap(),
+            Name::new("b".into()).unwrap(),
+            Name::new("c".into()).unwrap(),
         ];
         let mut r = RacingGame::new(names, 1, &f as &dyn Judge);
         r.add_callback(&f);
@@ -170,9 +170,9 @@ mod tests {
         //given
         let f = Fixture::new();
         let names = vec![
-            Name::new("a").unwrap(),
-            Name::new("b").unwrap(),
-            Name::new("c").unwrap(),
+            Name::new("a".into()).unwrap(),
+            Name::new("b".into()).unwrap(),
+            Name::new("c".into()).unwrap(),
         ];
         let mut r = RacingGame::new(names, 1, &f as &dyn Judge);
         r.add_callback(&f);
@@ -192,9 +192,9 @@ mod tests {
         let f = Fixture::new();
         let count = 2;
         let names = vec![
-            Name::new("a").unwrap(),
-            Name::new("b").unwrap(),
-            Name::new("c").unwrap(),
+            Name::new("a".into()).unwrap(),
+            Name::new("b".into()).unwrap(),
+            Name::new("c".into()).unwrap(),
         ];
         let mut r = RacingGame::new(names, count, &f as &dyn Judge);
         r.add_callback(&f);
@@ -211,9 +211,9 @@ mod tests {
         //given
         let f = Fixture::new();
         let names = vec![
-            Name::new("a").unwrap(),
-            Name::new("b").unwrap(),
-            Name::new("c").unwrap(),
+            Name::new("a".into()).unwrap(),
+            Name::new("b".into()).unwrap(),
+            Name::new("c".into()).unwrap(),
         ];
         let mut r = RacingGame::new(names, 1, &f as &dyn Judge);
         r.add_callback(&f);

@@ -47,13 +47,13 @@ mod tests {
 
     #[test]
     fn given_names_when_new_then_created() {
-        let names = vec![Name::new("a").unwrap(), Name::new("b").unwrap()];
+        let names = vec![Name::new("a".into()).unwrap(), Name::new("b".into()).unwrap()];
         let _ = Cars::new(names);
     }
 
     #[test]
     fn when_race_then_positions_are_increated() {
-        let names = vec![Name::new("a").unwrap(), Name::new("b").unwrap()];
+        let names = vec![Name::new("a".into()).unwrap(), Name::new("b".into()).unwrap()];
 
         let cars = Cars::new(names);
 
@@ -68,7 +68,7 @@ mod tests {
 
     #[test]
     fn when_results_then_return_results() {
-        let names = vec![Name::new("a").unwrap(), Name::new("b").unwrap()];
+        let names = vec![Name::new("a".into()).unwrap(), Name::new("b".into()).unwrap()];
 
         let cars = Cars::new(names);
         let cars = cars.race(&F);

@@ -61,13 +61,13 @@ mod tests {
 
     #[test]
     fn when_new_then_created() {
-        let _ = Car::new(&Name::new("").unwrap());
+        let _ = Car::new(&Name::new("".into()).unwrap());
     }
 
     #[test]
     fn when_race_then_position_increased() {
         //given
-        let c = Car::new(&Name::new("").unwrap());
+        let c = Car::new(&Name::new("".into()).unwrap());
 
         //when
         let c = c.race(&F);
@@ -79,7 +79,7 @@ mod tests {
     #[test]
     fn when_name_then_returns_name() {
         //given
-        let name = Name::new("name").unwrap();
+        let name = Name::new("name".into()).unwrap();
         let c = Car::new(&name.clone());
 
         //when,then
@@ -89,7 +89,7 @@ mod tests {
     #[test]
     fn when_result_then_return_results() {
         //given
-        let name = Name::new("name").unwrap();
+        let name = Name::new("name".into()).unwrap();
         let c = Car::new(&name.clone());
 
         let result = c.result();
