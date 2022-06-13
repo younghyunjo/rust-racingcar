@@ -1,30 +1,48 @@
 use crate::domain::judge::Judge;
+use crate::domain::name::Name;
 use crate::domain::position::Position;
+use crate::RaceResult;
 
 pub struct Car {
+    name: Name,
     position: Position,
 }
 
 impl Car {
-    pub fn new() -> Self {
-        Car {
-            position: Position::new(),
-        }
+    pub fn new(name: Name) -> Self {
+        Car::with_position(name, Position::new())
     }
 
-    pub fn with_position(position: Position) -> Self {
-        Car { position }
+    pub fn with_position(name: Name, position: Position) -> Self {
+        Car { name, position }
     }
 
-    pub fn race(&self, judge: &dyn Judge) -> Car {
+    pub fn race<J: Judge>(&self, judge: &J) -> Car {
         if judge.judge() == true {
-            return Car::with_position(self.position.increase());
+            return Car::with_position(self.name(), self.position.increase());
         }
-        return Car::with_position(self.position());
+        return Car::with_position(self.name(), self.position());
     }
 
     pub fn position(&self) -> Position {
         self.position.clone()
+    }
+
+    pub fn name(&self) -> Name {
+        self.name.clone()
+    }
+
+    pub fn result(&self) -> RaceResult {
+        RaceResult::new(&self.name, self.position.clone())
+    }
+}
+
+impl Default for Car {
+    fn default() -> Self {
+        Car {
+            name: Name::default(),
+            position: Position::default(),
+        }
     }
 }
 
@@ -32,8 +50,10 @@ impl Car {
 mod tests {
     use crate::domain::car::Car;
     use crate::domain::judge::Judge;
+    use crate::domain::name::Name;
     use crate::domain::position::Position;
 
+    #[derive(PartialEq, Debug, Clone, PartialOrd)]
     struct Fixture;
     impl Judge for Fixture {
         fn judge(&self) -> bool {
@@ -45,13 +65,46 @@ mod tests {
 
     #[test]
     fn when_new_then_created() {
-        let _ = Car::new();
+        let _ = Car::new(Name::new("".into()).unwrap());
     }
 
     #[test]
     fn when_race_then_position_increased() {
         //given
-        let c = Car::new();
+        let c = Car::new(Name::new("".into()).unwrap());
+
+        //when
+        let c = c.race(&F);
+
+        //then
+        assert_eq!(c.position(), Position::from(1));
+    }
+
+    #[test]
+    fn when_name_then_returns_name() {
+        //given
+        let name = Name::new("name".into()).unwrap();
+        let c = Car::new(name.clone());
+
+        //when,then
+        assert_eq!(c.name(), name);
+    }
+
+    #[test]
+    fn when_result_then_return_results() {
+        //given
+        let name = Name::new("name".into()).unwrap();
+        let c = Car::new(name.clone());
+
+        let result = c.result();
+        assert_eq!(result.name(), c.name());
+        assert_eq!(result.position(), Position::from(0));
+    }
+
+    #[test]
+    fn when_race2_then_position_increased() {
+        //given
+        let c = Car::new(Name::new("".into()).unwrap());
 
         //when
         let c = c.race(&F);
