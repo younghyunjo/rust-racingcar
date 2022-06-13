@@ -20,7 +20,7 @@ impl Cars {
         Cars { cars }
     }
 
-    pub fn race(&self, judge: &dyn Judge) -> Self {
+    pub fn race<J: Judge>(&self, judge:&J) -> Self {
         Cars::with_cars(self.cars.iter().map(|c| c.race(judge)).collect())
     }
 

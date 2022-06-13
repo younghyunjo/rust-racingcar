@@ -8,15 +8,23 @@ use crate::domain::racing_game_callbacks::RacingGameCallback;
 use crate::domain::winners::Winners;
 use crate::{Position, RaceResult};
 
-pub struct RacingGame<'a> {
-    judge: Option<&'a (dyn Judge)>,
-    callback: RefCell<Vec<&'a dyn RacingGameCallback>>,
+pub struct RacingGame<'a, J, C>
+where
+    J: Judge,
+    C: RacingGameCallback,
+{
+    judge: Option<&'a J>,
+    callback: RefCell<Vec<&'a C>>,
     cars: Cars,
     count: u32,
 }
 
-impl<'a> RacingGame<'a> {
-    pub fn new(names: Vec<Name>, count: u32, judge: &'a dyn Judge) -> Self {
+impl<'a, J, C> RacingGame<'a, J, C>
+where
+    J: Judge,
+    C: RacingGameCallback,
+{
+    pub fn new(names: Vec<Name>, count: u32, judge: &'a J) -> Self {
         RacingGame {
             cars: Cars::new(names),
             judge: Some(judge),
@@ -41,7 +49,7 @@ impl<'a> RacingGame<'a> {
 
     pub fn winners(&self) -> Winners {
         let mut winners_name: Vec<Name> = vec![];
-        let mut winner_position: Position = Position::from(0);
+        let winner_position = Position::from(0);
         for r in self.cars.results() {
             if r.position() > winner_position {
                 winners_name.clear();
@@ -54,7 +62,7 @@ impl<'a> RacingGame<'a> {
         Winners::new(winners_name)
     }
 
-    pub fn add_callback(&self, callback: &'a dyn RacingGameCallback) {
+    pub fn add_callback(&self, callback: &'a C) {
         self.callback.borrow_mut().push(callback);
     }
 
@@ -118,7 +126,7 @@ mod tests {
         ];
 
         //when, then
-        RacingGame::with_results(race_results);
+        let _: RacingGame<Fixture, Fixture> = RacingGame::with_results(race_results);
     }
 
     #[test]
@@ -129,7 +137,7 @@ mod tests {
             RaceResult::new(&Name::new("b".into()).unwrap(), Position::from(2)),
             RaceResult::new(&Name::new("c".into()).unwrap(), Position::from(3)),
         ];
-        let racing_game = RacingGame::with_results(race_results);
+        let racing_game: RacingGame<Fixture, Fixture> = RacingGame::with_results(race_results);
 
         //when
         let winners = racing_game.winners();
@@ -141,9 +149,12 @@ mod tests {
     #[test]
     fn given_names_when_new_then_created() {
         let f = Fixture::new();
-        let names = vec![Name::new("a".into()).unwrap(), Name::new("b".into()).unwrap()];
+        let names = vec![
+            Name::new("a".into()).unwrap(),
+            Name::new("b".into()).unwrap(),
+        ];
 
-        let _ = RacingGame::new(names, 1, &f as &dyn Judge);
+        let _: RacingGame<Fixture, Fixture> = RacingGame::new(names, 1, &f);
     }
 
     #[test]
@@ -155,7 +166,7 @@ mod tests {
             Name::new("b".into()).unwrap(),
             Name::new("c".into()).unwrap(),
         ];
-        let mut r = RacingGame::new(names, 1, &f as &dyn Judge);
+        let mut r = RacingGame::new(names, 1, &f);
         r.add_callback(&f);
 
         //when
@@ -174,7 +185,7 @@ mod tests {
             Name::new("b".into()).unwrap(),
             Name::new("c".into()).unwrap(),
         ];
-        let mut r = RacingGame::new(names, 1, &f as &dyn Judge);
+        let mut r = RacingGame::new(names, 1, &f);
         r.add_callback(&f);
 
         //when
@@ -196,7 +207,7 @@ mod tests {
             Name::new("b".into()).unwrap(),
             Name::new("c".into()).unwrap(),
         ];
-        let mut r = RacingGame::new(names, count, &f as &dyn Judge);
+        let mut r = RacingGame::new(names, count, &f);
         r.add_callback(&f);
 
         //when
@@ -215,7 +226,7 @@ mod tests {
             Name::new("b".into()).unwrap(),
             Name::new("c".into()).unwrap(),
         ];
-        let mut r = RacingGame::new(names, 1, &f as &dyn Judge);
+        let mut r = RacingGame::new(names, 1, &f);
         r.add_callback(&f);
 
         //when

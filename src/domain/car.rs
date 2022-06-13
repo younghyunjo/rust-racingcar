@@ -17,7 +17,7 @@ impl Car {
         Car { name, position }
     }
 
-    pub fn race(&self, judge: &dyn Judge) -> Car {
+    pub fn race<J: Judge>(&self, judge: &J) -> Car {
         if judge.judge() == true {
             return Car::with_position(self.name(), self.position.increase());
         }
@@ -44,6 +44,7 @@ mod tests {
     use crate::domain::name::Name;
     use crate::domain::position::Position;
 
+    #[derive(PartialEq, Debug, Clone, PartialOrd)]
     struct Fixture;
     impl Judge for Fixture {
         fn judge(&self) -> bool {
@@ -89,5 +90,17 @@ mod tests {
         let result = c.result();
         assert_eq!(result.name(), c.name());
         assert_eq!(result.position(), Position::from(0));
+    }
+
+    #[test]
+    fn when_race2_then_position_increased() {
+        //given
+        let c = Car::new(Name::new("".into()).unwrap());
+
+        //when
+        let c = c.race(&F);
+
+        //then
+        assert_eq!(c.position(), Position::from(1));
     }
 }
