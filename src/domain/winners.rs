@@ -4,6 +4,12 @@ pub struct Winners {
     names: Vec<Name>,
 }
 
+impl Default for Winners {
+    fn default() -> Self {
+        Winners { names: vec![] }
+    }
+}
+
 impl Winners {
     pub fn new(name: Vec<Name>) -> Self {
         Winners {

@@ -6,6 +6,15 @@ pub struct RaceResult {
     position: Position,
 }
 
+impl Default for RaceResult {
+    fn default() -> Self {
+        RaceResult {
+            name: Name::default(),
+            position: Position::default(),
+        }
+    }
+}
+
 impl RaceResult {
     pub fn new(name: &Name, position: Position) -> Self {
         RaceResult {

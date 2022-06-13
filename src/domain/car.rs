@@ -37,6 +37,15 @@ impl Car {
     }
 }
 
+impl Default for Car {
+    fn default() -> Self {
+        Car {
+            name: Name::default(),
+            position: Position::default(),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::domain::car::Car;

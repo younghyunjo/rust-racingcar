@@ -1,9 +1,24 @@
 use std::convert::From;
 use std::fmt::{Debug, Display, Formatter};
+use std::ops::Deref;
 
 #[derive(PartialEq, Debug, Clone, PartialOrd)]
 pub struct Position {
     position: u32,
+}
+
+impl Default for Position {
+    fn default() -> Self {
+        Position { position: 0 }
+    }
+}
+
+impl Deref for Position {
+    type Target = u32;
+
+    fn deref(&self) -> &Self::Target {
+        &self.position
+    }
 }
 
 impl Display for Position {

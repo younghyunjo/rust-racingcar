@@ -7,6 +7,12 @@ pub struct Cars {
     cars: Vec<Car>,
 }
 
+impl Default for Cars {
+    fn default() -> Self {
+        Cars { cars: vec![] }
+    }
+}
+
 impl Cars {
     pub fn new(names: Vec<Name>) -> Self {
         let mut cars: Vec<Car> = vec![];
@@ -20,7 +26,7 @@ impl Cars {
         Cars { cars }
     }
 
-    pub fn race<J: Judge>(&self, judge:&J) -> Self {
+    pub fn race<J: Judge>(&self, judge: &J) -> Self {
         Cars::with_cars(self.cars.iter().map(|c| c.race(judge)).collect())
     }
 
@@ -47,13 +53,19 @@ mod tests {
 
     #[test]
     fn given_names_when_new_then_created() {
-        let names = vec![Name::new("a".into()).unwrap(), Name::new("b".into()).unwrap()];
+        let names = vec![
+            Name::new("a".into()).unwrap(),
+            Name::new("b".into()).unwrap(),
+        ];
         let _ = Cars::new(names);
     }
 
     #[test]
     fn when_race_then_positions_are_increated() {
-        let names = vec![Name::new("a".into()).unwrap(), Name::new("b".into()).unwrap()];
+        let names = vec![
+            Name::new("a".into()).unwrap(),
+            Name::new("b".into()).unwrap(),
+        ];
 
         let cars = Cars::new(names);
 
@@ -68,7 +80,10 @@ mod tests {
 
     #[test]
     fn when_results_then_return_results() {
-        let names = vec![Name::new("a".into()).unwrap(), Name::new("b".into()).unwrap()];
+        let names = vec![
+            Name::new("a".into()).unwrap(),
+            Name::new("b".into()).unwrap(),
+        ];
 
         let cars = Cars::new(names);
         let cars = cars.race(&F);

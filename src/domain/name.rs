@@ -24,6 +24,14 @@ impl Deref for Name {
     }
 }
 
+impl Default for Name {
+    fn default() -> Self {
+        Name {
+            name: "".to_string(),
+        }
+    }
+}
+
 impl AsRef<String> for Name {
     fn as_ref(&self) -> &String {
         &self.name
